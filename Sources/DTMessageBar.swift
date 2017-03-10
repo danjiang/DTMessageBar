@@ -8,40 +8,100 @@
 
 import UIKit
 
-public enum DTMessageBarStyle {
-  case standard
-  case emoji
+public protocol DTMessageBarTheme {
+  var successBorderColor: UIColor { get }
+  var successBackgroundColor: UIColor { get }
+  var successTextColor: UIColor { get }
+  var infoBorderColor: UIColor { get }
+  var infoBackgroundColor: UIColor { get }
+  var infoTextColor: UIColor { get }
+  var warningBorderColor: UIColor { get }
+  var warningBackgroundColor: UIColor { get }
+  var warningTextColor: UIColor { get }
+  var errorBorderColor: UIColor { get }
+  var errorBackgroundColor: UIColor { get }
+  var errorTextColor: UIColor { get }
 }
 
-public enum DTMessageBarType {
-  case success
-  case info
-  case warning
-  case error
+public extension DTMessageBarTheme {
   
-  var description: String {
-    switch self {
-    case .success:
-      return "success"
-    case .info:
-      return "info"
-    case .warning:
-      return "warning"
-    case .error:
-      return "error"
-    }
+  var successBorderColor: UIColor {
+    return UIColor(red:0.84, green:0.91, blue:0.78, alpha:1.00)
   }
-}
 
-public enum DTMessageBarPosition {
-  case top
-  case center
-  case bottom
+  var successBackgroundColor: UIColor {
+    return UIColor(red:0.87, green:0.94, blue:0.85, alpha:1.00)
+  }
+  
+  var successTextColor: UIColor {
+    return UIColor(red:0.24, green:0.46, blue:0.24, alpha:1.00)
+  }
+  
+  var infoBorderColor: UIColor {
+    return UIColor(red:0.74, green:0.91, blue:0.95, alpha:1.00)
+  }
+  
+  var infoBackgroundColor: UIColor {
+    return UIColor(red:0.85, green:0.93, blue:0.97, alpha:1.00)
+  }
+  
+  var infoTextColor: UIColor {
+    return UIColor(red:0.19, green:0.44, blue:0.56, alpha:1.00)
+  }
+  
+  var warningBorderColor: UIColor {
+    return UIColor(red:0.98, green:0.92, blue:0.80, alpha:1.00)
+  }
+  
+  var warningBackgroundColor: UIColor {
+    return UIColor(red:0.99, green:0.97, blue:0.89, alpha:1.00)
+  }
+  
+  var warningTextColor: UIColor {
+    return UIColor(red:0.54, green:0.42, blue:0.23, alpha:1.00)
+  }
+  
+  var errorBorderColor: UIColor {
+    return UIColor(red:0.92, green:0.80, blue:0.82, alpha:1.00)
+  }
+  
+  var errorBackgroundColor: UIColor {
+    return UIColor(red:0.95, green:0.87, blue:0.87, alpha:1.00)
+  }
+  
+  var errorTextColor: UIColor {
+    return UIColor(red:0.66, green:0.27, blue:0.26, alpha:1.00)
+  }
+  
 }
 
 public class DTMessageBar: UIView {
   
-  public static var style: DTMessageBarStyle = .standard
+  public enum IconSet {
+    case standard
+    case emoji
+    case custom
+  }
+  
+  public enum Style: String {
+    case success
+    case info
+    case warning
+    case error
+  }
+  
+  public enum Position {
+    case top
+    case center
+    case bottom
+  }
+  
+  public struct DefaultTheme: DTMessageBarTheme {
+    public init() {}
+  }
+  
+  public static var iconSet: IconSet = .standard
+  public static var theme: DTMessageBarTheme = DefaultTheme()
   public static var offset: CGFloat = 80
 
   fileprivate static let sharedView = DTMessageBar()
@@ -60,23 +120,30 @@ public class DTMessageBar: UIView {
     layoutMessageLabel()
   }
   
-  public class func success(message: String, position: DTMessageBarPosition = .top) {
-    show(message: message, type: .success, position: position)
+  public class func success(message: String, position: Position = .top) {
+    show(message: message, style: .success, position: position)
   }
   
-  public class func info(message: String, position: DTMessageBarPosition = .top) {
-    show(message: message, type: .info, position: position)
+  public class func info(message: String, position: Position = .top) {
+    show(message: message, style: .info, position: position)
   }
   
-  public class func warning(message: String, position: DTMessageBarPosition = .top) {
-    show(message: message, type: .warning, position: position)
+  public class func warning(message: String, position: Position = .top) {
+    show(message: message, style: .warning, position: position)
   }
   
-  public class func error(message: String, position: DTMessageBarPosition = .top) {
-    show(message: message, type: .error, position: position)
+  public class func error(message: String, position: Position = .top) {
+    show(message: message, style: .error, position: position)
   }
   
-  class func show(message: String, type: DTMessageBarType, position: DTMessageBarPosition = .top) {
+  public static func imageWithName(_ name: String) -> UIImage? {
+    let bundle = Bundle(for: DTMessageBar.self)
+    let url = bundle.url(forResource: "DTMessageBar", withExtension: "bundle")!
+    let imageBundle = Bundle(url: url)
+    return UIImage(named: name, in: imageBundle, compatibleWith: nil)
+  }
+
+  fileprivate class func show(message: String, style: Style, position: Position) {
     if let _ = DTMessageBar.sharedView.superview {
       return
     }
@@ -101,7 +168,7 @@ public class DTMessageBar: UIView {
         window.addConstraint(bottom)
       }
       
-      DTMessageBar.sharedView.customize(message: message, type: type)
+      DTMessageBar.sharedView.customize(message: message, style: style)
       
       DTMessageBar.sharedView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
       
@@ -150,9 +217,9 @@ public class DTMessageBar: UIView {
     addConstraints([leading, trailing, centerY])
   }
   
-  fileprivate func customize(message: String, type: DTMessageBarType) {
+  fileprivate func customize(message: String, style: Style) {
     layer.cornerRadius = 12
-    layer.borderWidth = 1
+    layer.borderWidth = 2
     
     messageLabel.text = message
     
@@ -160,38 +227,44 @@ public class DTMessageBar: UIView {
     var backgroundColor: UIColor
     var textColor: UIColor
 
-    switch type {
+    switch style {
     case .success:
-      borderColor = UIColor(red:0.84, green:0.91, blue:0.78, alpha:1.00)
-      backgroundColor = UIColor(red:0.87, green:0.94, blue:0.85, alpha:1.00)
-      textColor = UIColor(red:0.24, green:0.46, blue:0.24, alpha:1.00)
+      borderColor = DTMessageBar.theme.successBorderColor
+      backgroundColor = DTMessageBar.theme.successBackgroundColor
+      textColor = DTMessageBar.theme.successTextColor
     case .info:
-      borderColor = UIColor(red:0.74, green:0.91, blue:0.95, alpha:1.00)
-      backgroundColor = UIColor(red:0.85, green:0.93, blue:0.97, alpha:1.00)
-      textColor = UIColor(red:0.19, green:0.44, blue:0.56, alpha:1.00)
+      borderColor = DTMessageBar.theme.infoBorderColor
+      backgroundColor = DTMessageBar.theme.infoBackgroundColor
+      textColor = DTMessageBar.theme.infoTextColor
     case .warning:
-      borderColor = UIColor(red:0.98, green:0.92, blue:0.80, alpha:1.00)
-      backgroundColor = UIColor(red:0.99, green:0.97, blue:0.89, alpha:1.00)
-      textColor = UIColor(red:0.54, green:0.42, blue:0.23, alpha:1.00)
+      borderColor = DTMessageBar.theme.warningBorderColor
+      backgroundColor = DTMessageBar.theme.warningBackgroundColor
+      textColor = DTMessageBar.theme.warningTextColor
     case .error:
-      borderColor = UIColor(red:0.92, green:0.80, blue:0.82, alpha:1.00)
-      backgroundColor = UIColor(red:0.95, green:0.87, blue:0.87, alpha:1.00)
-      textColor = UIColor(red:0.66, green:0.27, blue:0.26, alpha:1.00)
+      borderColor = DTMessageBar.theme.errorBorderColor
+      backgroundColor = DTMessageBar.theme.errorBackgroundColor
+      textColor = DTMessageBar.theme.errorTextColor
     }
     
     var imageName: String
-    switch DTMessageBar.style {
+    switch DTMessageBar.iconSet {
     case .standard:
-      imageName = type.description
+      imageName = style.rawValue
     case .emoji:
-      imageName = "\(type.description)_emoji"
+      imageName = "\(style.rawValue)_emoji"
+    case .custom:
+      imageName = "\(style.rawValue)_custom"
     }
-    
     
     layer.borderColor = borderColor.cgColor
     self.backgroundColor = backgroundColor
     messageLabel.textColor = textColor
-    typeImageView.image = imageWithName(imageName)
+    
+    if DTMessageBar.iconSet != .custom {
+      typeImageView.image = DTMessageBar.imageWithName(imageName)
+    } else {
+      typeImageView.image = UIImage(named: imageName)
+    }
   }
   
 }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = "DTMessageBar"
-  spec.version = "1.0.0"
+  spec.version = "1.1.0"
   spec.summary = "Simple message bar"
   spec.homepage = "https://github.com/danjiang/DTMessageBar"
   spec.license = { type: 'MIT', file: 'LICENSE' }
@@ -11,5 +11,5 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   spec.source = { git: "https://github.com/danjiang/DTMessageBar.git", tag: spec.version, submodules: true }
   spec.source_files = "Sources/**/*.{h,swift}"
-  spec.resources = "Sources/*.png"
+  spec.resources = "Sources/*.bundle"
 end

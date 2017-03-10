@@ -11,17 +11,29 @@ import DTMessageBar
 
 class ViewController: UIViewController {
 
-  @IBOutlet weak var styleSegmentedControl: UISegmentedControl!
+  @IBOutlet weak var iconSetSegmentedControl: UISegmentedControl!
   @IBOutlet weak var typeSegmentedControl: UISegmentedControl!
   @IBOutlet weak var positionSegmentedControl: UISegmentedControl!
+  @IBOutlet weak var themeSegmentedControl: UISegmentedControl!
   @IBOutlet weak var messageTextField: UITextField!
   
-  @IBAction func chooseStyle(_ sender: Any) {
-    switch styleSegmentedControl.selectedSegmentIndex {
+  @IBAction func chooseIconSet(_ sender: Any) {
+    switch iconSetSegmentedControl.selectedSegmentIndex {
     case 1:
-      DTMessageBar.style = .emoji
+      DTMessageBar.iconSet = .emoji
+    case 2:
+      DTMessageBar.iconSet = .custom
     default:
-      DTMessageBar.style = .standard
+      DTMessageBar.iconSet = .standard
+    }
+  }
+  
+  @IBAction func chooseTheme(_ sender: Any) {
+    switch themeSegmentedControl.selectedSegmentIndex {
+    case 1:
+      DTMessageBar.theme = DarkTheme()
+    default:
+      DTMessageBar.theme = DTMessageBar.DefaultTheme()
     }
   }
   
@@ -30,7 +42,7 @@ class ViewController: UIViewController {
       return
     }
     
-    let position: DTMessageBarPosition
+    let position: DTMessageBar.Position
     switch positionSegmentedControl.selectedSegmentIndex {
     case 1:
       position = .center
@@ -39,8 +51,6 @@ class ViewController: UIViewController {
     default:
       position = .top
     }
-    
-    DTMessageBar.success(message: "Good Jobs", position: .center)
     
     switch typeSegmentedControl.selectedSegmentIndex {
     case 1:
@@ -60,3 +70,54 @@ class ViewController: UIViewController {
   
 }
 
+struct DarkTheme: DTMessageBarTheme {
+  
+  var successBorderColor: UIColor {
+    return UIColor.black
+  }
+  
+  var successBackgroundColor: UIColor {
+    return UIColor(red:0.11, green:0.11, blue:0.15, alpha:0.8)
+  }
+  
+  var successTextColor: UIColor {
+    return UIColor.white
+  }
+  
+  var infoBorderColor: UIColor {
+    return UIColor.black
+  }
+  
+  var infoBackgroundColor: UIColor {
+    return UIColor(red:0.11, green:0.11, blue:0.15, alpha:0.8)
+  }
+  
+  var infoTextColor: UIColor {
+    return UIColor.white
+  }
+  
+  var warningBorderColor: UIColor {
+    return UIColor.black
+  }
+  
+  var warningBackgroundColor: UIColor {
+    return UIColor(red:0.11, green:0.11, blue:0.15, alpha:0.8)
+  }
+  
+  var warningTextColor: UIColor {
+    return UIColor.white
+  }
+  
+  var errorBorderColor: UIColor {
+    return UIColor.black
+  }
+  
+  var errorBackgroundColor: UIColor {
+    return UIColor(red:0.11, green:0.11, blue:0.15, alpha:0.8)
+  }
+  
+  var errorTextColor: UIColor {
+    return UIColor.white
+  }
+
+}
