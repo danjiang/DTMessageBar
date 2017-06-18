@@ -186,11 +186,6 @@ public class DTMessageBar: UIView {
   
   // MARK: - Private
 
-  fileprivate func imageWithName(_ name: String) -> UIImage? {
-    let bundle = Bundle(for: DTMessageBar.self)
-    return UIImage(named: name, in: bundle, compatibleWith: nil)
-  }
-
   fileprivate func layoutTypeImageView() {
     addSubview(typeImageView)
     
