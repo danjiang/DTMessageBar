@@ -13,23 +13,23 @@ Simple message bar.
 
 Standard Style.
 
-![Success Standard](success_standard.jpg)
+![Success Standard](images/success_standard.jpg)
 
-![Info Standard](info_standard.jpg)
+![Info Standard](images/info_standard.jpg)
 
-![Warning Standard](warning_standard.jpg)
+![Warning Standard](images/warning_standard.jpg)
 
-![Error Standard](error_standard.jpg)
+![Error Standard](images/error_standard.jpg)
 
 Emoji Style.
 
-![Success Emoji](success_emoji.jpg)
+![Success Emoji](images/success_emoji.jpg)
 
-![Info Emoji](info_emoji.jpg)
+![Info Emoji](images/info_emoji.jpg)
 
-![Warning Emoji](warning_emoji.jpg)
+![Warning Emoji](images/warning_emoji.jpg)
 
-![Error Emoji](error_emoji.jpg)
+![Error Emoji](images/error_emoji.jpg)
 
 ## Installation
 
