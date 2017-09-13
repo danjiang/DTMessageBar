@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = "DTMessageBar"
-  spec.version = "1.1.1"
+  spec.version = "1.1.2"
   spec.summary = "Simple message bar"
   spec.homepage = "https://github.com/danjiang/DTMessageBar"
   spec.license = { type: 'MIT', file: 'LICENSE' }
