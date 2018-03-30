@@ -104,10 +104,10 @@ public class DTMessageBar: UIView {
   public static var theme: DTMessageBarTheme = DefaultTheme()
   public static var offset: CGFloat = 80
 
-  fileprivate static let sharedView = DTMessageBar()
+  private static let sharedView = DTMessageBar()
   
-  fileprivate let typeImageView = UIImageView()
-  fileprivate let messageLabel = UILabel()
+  private let typeImageView = UIImageView()
+  private let messageLabel = UILabel()
   
   public required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -143,7 +143,7 @@ public class DTMessageBar: UIView {
     return UIImage(named: name, in: imageBundle, compatibleWith: nil)
   }
 
-  fileprivate class func show(message: String, style: Style, position: Position) {
+  private class func show(message: String, style: Style, position: Position) {
     if let _ = DTMessageBar.sharedView.superview {
       return
     }
@@ -186,7 +186,7 @@ public class DTMessageBar: UIView {
   
   // MARK: - Private
 
-  fileprivate func layoutTypeImageView() {
+  private func layoutTypeImageView() {
     addSubview(typeImageView)
     
     typeImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -198,7 +198,7 @@ public class DTMessageBar: UIView {
     addConstraints([top, leading, bottom])
   }
   
-  fileprivate func layoutMessageLabel() {
+  private func layoutMessageLabel() {
     messageLabel.font = UIFont.boldSystemFont(ofSize: 17)
     
     addSubview(messageLabel)
@@ -212,7 +212,7 @@ public class DTMessageBar: UIView {
     addConstraints([leading, trailing, centerY])
   }
   
-  fileprivate func customize(message: String, style: Style) {
+  private func customize(message: String, style: Style) {
     layer.cornerRadius = 12
     layer.borderWidth = 2
     
